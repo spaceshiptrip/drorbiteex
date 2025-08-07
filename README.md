@@ -35,14 +35,39 @@ ground station
 
 ## Getting started
 Make sure you have Java >= 11 and Apache Maven installed.
+* Check the version of Java you have installed in your system by opening a terminal and typing:
+  ```
+    java -version
+  ```
+* If you do not have Java installed or the version is less than 11, follow the next steps.  Otherwise, move on to installing Orbiteex. 
+* Recommend using SDKMan! for Java installation:
+  * Follow download and installation instructions for [SDKMAN!](https://sdkman.io/install)
+  * Install the latest Java:
+    ```
+     sdk install java 21.0.8-tem
+    ```
+  * If you don't want to set it as the default version, use it after with the command:
+    ```
+     sdk use java 21.0.8-tem
+    ```
+
+
+
 
 In order to have Dr. Orbiteex up and running from scratch, run the following steps:
-1. Download the Orekit Data from https://gitlab.orekit.org/orekit/orekit-data/-/archive/master/orekit-data-master.zip
+1. Download the Orekit Data from https://gitlab.orekit.org/orekit/orekit-data/-/archive/master/orekit-data-main.zip
 2. Extract the contents
-3. Rename the extracted folder from "orekit-data-master" to "orekit-data"
-4. Create a folder named "drorbiteex" inside your home folder (e.g. "C:\Users\<your username>\drorbiteex" on Windows or 
-"/home/<your username>/drorbiteex" on Linux)
-5. Copy the "orekit-data" folder inside the "drorbiteex" folder created in step 4
+3. Rename the extracted folder from `orekit-data-master` to `orekit-data`
+4. Create a folder named "drorbiteex" inside your home folder 
+   Windows:
+    ```
+     C:\Users\<your username>\drorbiteex
+    ```
+   Mac / Linux:
+   ```
+    /home/<your username>/drorbiteex
+   ```
+5. Move or copy the `orekit-data` folder inside the `drorbiteex` folder created in step 4
 
 Now, obtain the Dr. Orbiteex binaries:
 1. Download the pre-compiled version from GitHub under Releases;
