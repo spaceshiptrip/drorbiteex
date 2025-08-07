@@ -34,6 +34,10 @@ ground station
 ![AND](img/drorbiteex4.png "Dr. Orbiteex orbit error analysis")
 
 ## Getting started
+
+### Installing Dependencies
+
+#### Java
 Make sure you have Java >= 11 and Apache Maven installed.
 * Check the version of Java you have installed in your system by opening a terminal and typing:
   ```
@@ -50,15 +54,14 @@ Make sure you have Java >= 11 and Apache Maven installed.
     ```
      sdk use java 21.0.8-tem
     ```
+#### Orekit Data
 
+Provides external data for physical models - like earth orientation parameters and the leap seconds history. 
 
-
-
-In order to have Dr. Orbiteex up and running from scratch, run the following steps:
-1. Download the Orekit Data from https://gitlab.orekit.org/orekit/orekit-data/-/archive/master/orekit-data-main.zip
+1. Download the [Orekit Data zip file here](https://gitlab.orekit.org/orekit/orekit-data/-/archive/master/orekit-data-main.zip)
 2. Extract the contents
-3. Rename the extracted folder from `orekit-data-master` to `orekit-data`
-4. Create a folder named "drorbiteex" inside your home folder 
+3. Rename the extracted folder from `orekit-data-main` to `orekit-data`
+4. Create a folder named `drorbiteex` inside your home folder 
    Windows:
     ```
      C:\Users\<your username>\drorbiteex
@@ -69,15 +72,22 @@ In order to have Dr. Orbiteex up and running from scratch, run the following ste
    ```
 5. Move or copy the `orekit-data` folder inside the `drorbiteex` folder created in step 4
 
-Now, obtain the Dr. Orbiteex binaries:
-1. Download the pre-compiled version from GitHub under Releases;
-  
-or:
-1. Clone Dr. Orbiteex from GitHub and checkout the master branch or one of the branches you want to compile
-2. Perform a "mvn clean install -Prelease" from the fetched version
-3. In the "target" folder, zip and tar.gz files will be generated for Windows, Linux, Mac
+### Dr Orbiteex Binaries
+1. Download the pre-compiled version [here](https://github.com/dariol83/drorbiteex/releases/tag/v1.2.0)
 
 Finally, decompress the zip/tar.gz file anywhere on your filesystem, and run the start.bat (Windows) or start.sh (Linux/Mac) inside
+---
+## Building 
+### Maven
+In order build, make sure you install Maven.
+Mac (Homebrew):
+```
+ brew install maven
+```
+
+1. Clone current repo and checkout the branch the branch you want to compile
+2. Perform a "mvn clean install -Prelease" from the fetched version
+3. In the "target" folder, zip and tar.gz files will be generated for Windows, Linux, Mac
 
 ## Extensions
 Dr. Orbiteex can export CCSDS OEM files and CCSDS Simple Schedule Files. There is a way to customise some aspects of this 
