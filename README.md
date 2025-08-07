@@ -58,7 +58,7 @@ Make sure you have Java >= 11 and Apache Maven installed.
 
 Provides external data for physical models - like earth orientation parameters and the leap seconds history. 
 
-1. Download the [Orekit Data zip file here](https://gitlab.orekit.org/orekit/orekit-data/-/archive/master/orekit-data-main.zip)
+1. Download the [Orekit Data zip file here](https://gitlab.orekit.org/orekit/orekit-data/-/archive/main/orekit-data-main.zip)
 2. Extract the contents
 3. Rename the extracted folder from `orekit-data-main` to `orekit-data`
 4. Create a folder named `drorbiteex` inside your home folder 
