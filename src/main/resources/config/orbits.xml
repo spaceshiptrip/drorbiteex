@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:orbit-config xmlns:ns2="http://dariolucia.eu/drorbiteex/orbit">
+    <configuration>
+        <afterPropagationSteps>150</afterPropagationSteps>
+        <beforePropagationSteps>50</beforePropagationSteps>
+        <recomputeFullDataInterval>600</recomputeFullDataInterval>
+        <stepInterval>120</stepInterval>
+    </configuration>
+    <orbit code="NISAR" color="0xffff00ff" id="39a47d0f-09f3-4ecb-809d-977598e13e00" name="NISAR" visible="true">
+        <tle-celestrak-model celestrakName="NISAR" group="active">
+            <tle>1 65053U 25163A   25217.64061333  .00000213  00000+0  72265-4 0  9990
+2 65053  98.4436  44.4880 0012312 251.3742 108.6112 14.45884865   884</tle>
+        </tle-celestrak-model>
+    </orbit>
+</ns2:orbit-config>

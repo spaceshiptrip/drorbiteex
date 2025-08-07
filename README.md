@@ -64,13 +64,13 @@ Provides external data for physical models - like earth orientation parameters a
 4. Create a folder named `drorbiteex` inside your home folder 
    Windows:
     ```
-     C:\Users\<your username>\drorbiteex
+     C:\Users\<your username>\.drorbiteex
     ```
    Mac / Linux:
    ```
-    /home/<your username>/drorbiteex
+    /home/<your username>/.drorbiteex
    ```
-5. Move or copy the `orekit-data` folder inside the `drorbiteex` folder created in step 4
+5. Move or copy the `orekit-data` folder inside the `.drorbiteex` folder created in step 4
 
 ### Dr Orbiteex Binaries
 1. Download the pre-compiled version [here](https://github.com/dariol83/drorbiteex/releases/tag/v1.2.0)
