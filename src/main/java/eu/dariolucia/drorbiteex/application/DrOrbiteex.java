@@ -41,7 +41,7 @@ import java.util.Optional;
 
 public class DrOrbiteex extends Application {
 
-    public static final String APPLICATION_NAME = "Dr. Orbiteex";
+    public static final String APPLICATION_NAME = "NISAR Orbit Viewer";
     public static final String VERSION = "1.1.1";
 
     private static final String DEFAULT_CONFIG_FOLDER = System.getProperty("user.home") + File.separator + "drorbiteex";
