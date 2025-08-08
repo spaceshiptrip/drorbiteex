@@ -194,7 +194,18 @@
                 <configuration>
                     <release>${java.version}</release>
                 </configuration>
-            </plugin>
+              </plugin>
+
+                  <!-- Quick run plugin (outside profiles) -->
+                  <plugin>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-maven-plugin</artifactId>
+                    <version>0.0.8</version>
+                    <configuration>
+                      <mainClass>eu.dariolucia.drorbiteex.application.DrOrbiteex</mainClass>
+                    </configuration>
+                  </plugin>
+
         </plugins>
     </build>
 

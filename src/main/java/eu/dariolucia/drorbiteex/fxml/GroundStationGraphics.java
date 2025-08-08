@@ -33,6 +33,11 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.shape.StrokeType;
+
+
 import org.hipparchus.geometry.euclidean.threed.Vector3D;
 
 import java.util.*;
@@ -102,9 +107,26 @@ public class GroundStationGraphics implements IGroundStationListener {
         this.graphicItem.setTranslateX(location.getX());
         this.graphicItem.setTranslateY(location.getY());
         this.graphicItem.setTranslateZ(location.getZ());
+//        this.textItem.setText(obj.getCode());
+//        this.textItem.setFill(Color.WHITE);
+//        this.textItem.setStroke(Color.valueOf(obj.getColor()));
+//
+
+        // Set the text label to the station code
         this.textItem.setText(obj.getCode());
+
+        // Make the font bold
+        this.textItem.setFont(Font.font("System", FontWeight.BOLD, 14)); // adjust size if needed
+
+        // Fill text with white
         this.textItem.setFill(Color.WHITE);
-        this.textItem.setStroke(Color.valueOf(obj.getColor()));
+
+        // Add a black outline
+        this.textItem.setStroke(Color.BLACK);
+        this.textItem.setStrokeWidth(2.0); // thickness of the outline
+        this.textItem.setStrokeType(StrokeType.OUTSIDE); // ensures outline doesn't cut into the fill
+
+
 
         Point3D locationText = DrawingUtils.latLonToScreenPoint(obj.getLatitude(), obj.getLongitude(), DrawingUtils.EARTH_RADIUS + 10);
         Transform result = new Translate(locationText.getX(), locationText.getY(), locationText.getZ());
@@ -127,7 +149,13 @@ public class GroundStationGraphics implements IGroundStationListener {
             if(isSelected) {
                 gc.strokeOval(xy[0] - 4, xy[1] - 4, 8, 8);
             }
-            gc.fillText(obj.getCode(), xy[0], xy[1] - 5);
+            //gc.fillText(obj.getCode(), xy[0], xy[1] - 5);
+            gc.setLineWidth(2.0);
+            gc.setStroke(Color.BLACK);
+            gc.strokeText(obj.getCode(), xy[0], xy[1] - 5); // outline
+            gc.setFill(Color.WHITE);
+            gc.fillText(obj.getCode(), xy[0], xy[1] - 5);   // fill
+
             // Ground track
             gc.setStroke(gsColor);
             gc.setFill(new Color(gsColor.getRed(), gsColor.getGreen(), gsColor.getBlue(), gsColor.getOpacity()/3));
