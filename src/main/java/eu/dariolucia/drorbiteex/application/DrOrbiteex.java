@@ -44,7 +44,7 @@ public class DrOrbiteex extends Application {
     public static final String APPLICATION_NAME = "NISAR Orbit Viewer";
     public static final String VERSION = "1.1.1";
 
-    private static final String DEFAULT_CONFIG_FOLDER = System.getProperty("user.home") + File.separator + ".drorbiteex";
+    private static final String DEFAULT_CONFIG_FOLDER = System.getProperty("user.home") + File.separator + ".nisar-orbit";
     private static final String DEFAULT_ORBIT_CONFIG_FILE_NAME = "orbits.xml";
     private static final String DEFAULT_ORBIT_CONFIG_LOCATION = DEFAULT_CONFIG_FOLDER + File.separator + DEFAULT_ORBIT_CONFIG_FILE_NAME;
     private static final String DEFAULT_GS_CONFIG_FILE_NAME = "groundstations.xml";

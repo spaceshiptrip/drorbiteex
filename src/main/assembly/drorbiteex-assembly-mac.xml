@@ -31,6 +31,12 @@
             <lineEnding>unix</lineEnding>
         </file>
         <file>
+            <source> ${project.basedir}/scripts/setup.sh</source>
+            <outputDirectory>./</outputDirectory>
+            <fileMode>0755</fileMode>
+            <lineEnding>unix</lineEnding>
+        </file>
+        <file>
             <source> ${project.basedir}/LICENSE</source>
             <outputDirectory>./about</outputDirectory>
         </file>
@@ -39,6 +45,32 @@
             <outputDirectory>./about</outputDirectory>
         </file>
     </files>
+    <fileSets>
+        <fileSet>
+            <directory>${project.basedir}/jvm/mac-aarch64</directory>
+            <outputDirectory>jvm</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <fileMode>0755</fileMode> <!-- Optional: if files are executables -->
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/orekit-data</directory>
+            <outputDirectory>orekit-data</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <fileMode>0755</fileMode> <!-- Optional: if files are executables -->
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/config</directory>
+            <outputDirectory>config</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <fileMode>0755</fileMode> <!-- Optional: if files are executables -->
+        </fileSet>
+    </fileSets>
     <dependencySets>
         <dependencySet>
             <outputDirectory>bin</outputDirectory>
