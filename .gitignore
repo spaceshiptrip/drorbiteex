@@ -27,3 +27,6 @@ hs_err_pid*
 
 # Ignore bundled JVM binaries
 jvm/
+
+# Ignore orekit-data binaries
+orekit-data/
