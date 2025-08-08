@@ -305,7 +305,7 @@ public class PolarPlot implements Initializable {
 
     public void selectGroundStation(GroundStationGraphics b) {
         this.currentMask = b.getGroundStation().getMask() != null ? b.getGroundStation().getMask().getAzElMap() : null;
-        setText(PlotPosition.BOTTOM_LEFT, b.getGroundStation().getName() + " (" + b.getGroundStation().getCode() + ")", Color.WHITE);
+        setText(PlotPosition.BOTTOM_LEFT, b.getGroundStation().getCode() + ":  " + b.getGroundStation().getName(), Color.WHITE);
 
         refresh();
     }
