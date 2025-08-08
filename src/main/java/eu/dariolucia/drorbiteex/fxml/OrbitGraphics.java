@@ -168,61 +168,147 @@ public class OrbitGraphics implements IOrbitListener {
         // Trajectory object
         this.graphicItem = new Group();
         // Spacecraft object
-        this.scItem = new Box(5,5,5);
+        this.scItem = new Box(15,15,15);
         // Spacecraft text
         this.textItem = new Text(0, 0, obj.getName());
 
         return Arrays.asList(graphicItem, scItem, textItem);
     }
 
+
     public void draw(GraphicsContext gc, ViewBox widgetViewport, ViewBox latLonViewport, boolean isSelected) {
-        if(obj.isVisible()) {
-            List<SpacecraftPosition> spacecraftPositions = obj.getSpacecraftPositions();
-            List<double[]> latLonPoints = spacecraftPositions.stream().map(o -> new double[] {Math.toDegrees(o.getLatLonHeight().getLatitude()), Math.toDegrees(o.getLatLonHeight().getLongitude())}).collect(Collectors.toList());
-            if(!isSelected) {
-                gc.setStroke(Color.valueOf(obj.getColor()));
-                gc.setFill(gc.getStroke());
-                gc.setLineWidth(1.5);
-            } else {
-                gc.setStroke(Color.valueOf(obj.getColor()).brighter().brighter());
-                gc.setFill(gc.getStroke());
-                gc.setLineWidth(3.5);
-            }
-            if (!latLonPoints.isEmpty()) {
-                double[] previousPoint = latLonPoints.get(0);
-                double[] start = DrawingUtils.mapToWidgetCoordinates(previousPoint[0], previousPoint[1], widgetViewport, latLonViewport);
-                gc.beginPath();
-                gc.moveTo(start[0], start[1]);
-                for (int i = 1; i < latLonPoints.size(); ++i) {
-                    double[] nextPoint = latLonPoints.get(i);
-                    double[] p2 = DrawingUtils.mapToWidgetCoordinates(nextPoint[0], nextPoint[1], widgetViewport, latLonViewport);
-                    // If there is a longitude sign swap with large distance, moveTo instead of lineTo
-                    boolean swap = Math.abs(nextPoint[1] - previousPoint[1]) > 45; // ((nextPoint[1] < 0 && previousPoint[1] > 0) || (nextPoint[1] > 0 && previousPoint[1] < 0)) &&
-                    if(swap) {
-                        gc.moveTo(p2[0], p2[1]);
-                    } else {
-                        gc.lineTo(p2[0], p2[1]);
-                    }
-                    previousPoint = nextPoint;
-                }
-                gc.stroke();
-                gc.closePath();
-            }
-            if(obj.getCurrentSpacecraftPosition() == null) {
-                return;
-            }
-            GeodeticPoint scLatLon = obj.getCurrentSpacecraftPosition().getLatLonHeight();
-            if (scLatLon != null) {
-                double[] scCenter = DrawingUtils.mapToWidgetCoordinates(Math.toDegrees(scLatLon.getLatitude()), Math.toDegrees(scLatLon.getLongitude()), widgetViewport, latLonViewport);
-                if(isSelected) {
-                    gc.fillRect(scCenter[0] - 4, scCenter[1] - 4, 8, 8);
+        // Only draw if the orbit is flagged visible
+        if (!obj.isVisible()) {
+            return;
+        }
+
+        // Grab all precomputed spacecraft positions forming the 2D ground-track
+        List<SpacecraftPosition> spacecraftPositions = obj.getSpacecraftPositions();
+
+        // Convert positions to (lat, lon) pairs in degrees for easy 2D projection
+        List<double[]> latLonPoints = spacecraftPositions.stream()
+                .map(o -> new double[] {
+                        Math.toDegrees(o.getLatLonHeight().getLatitude()),
+                        Math.toDegrees(o.getLatLonHeight().getLongitude())
+                })
+                .collect(Collectors.toList());
+
+        // Pick color: brighten if this orbit is selected to make it pop
+        if (!isSelected) {
+            gc.setStroke(Color.valueOf(obj.getColor())); // normal color
+            gc.setFill(gc.getStroke());                  // fill matches line color
+            gc.setLineWidth(1.5);                        // thinner track when not selected
+        } else {
+            gc.setStroke(Color.valueOf(obj.getColor()).brighter().brighter()); // brighter when selected
+            gc.setFill(gc.getStroke());                                       // fill matches brighter stroke
+            gc.setLineWidth(3.5);                                              // thicker line for emphasis
+        }
+
+        // Draw the ground-track polyline (with gap handling across large longitude jumps)
+        if (!latLonPoints.isEmpty()) {
+            // Start from the first point
+            double[] previousPoint = latLonPoints.get(0);
+            double[] start = DrawingUtils.mapToWidgetCoordinates(
+                    previousPoint[0], previousPoint[1], widgetViewport, latLonViewport);
+
+            gc.beginPath();                 // begin path for the polyline
+            gc.moveTo(start[0], start[1]);  // move to the first projected point
+
+            for (int i = 1; i < latLonPoints.size(); ++i) {
+                double[] nextPoint = latLonPoints.get(i);
+
+                // Project next lat/lon to canvas coords
+                double[] p2 = DrawingUtils.mapToWidgetCoordinates(
+                        nextPoint[0], nextPoint[1], widgetViewport, latLonViewport);
+
+                // If there is a big longitude jump (e.g., across ±180°), break the polyline
+                boolean bigJump = Math.abs(nextPoint[1] - previousPoint[1]) > 45;
+                if (bigJump) {
+                    gc.moveTo(p2[0], p2[1]); // restart the path to avoid a line through the map edge
                 } else {
-                    gc.fillRect(scCenter[0] - 2, scCenter[1] - 2, 4, 4);
+                    gc.lineTo(p2[0], p2[1]); // continue the path normally
                 }
-                gc.fillText(obj.getName(), scCenter[0], scCenter[1] - 5);
+
+                previousPoint = nextPoint;  // advance the previous point
+            }
+
+            gc.stroke();   // render the polyline
+            gc.closePath();// close the path
+        }
+
+        // If we don’t have a current position, we’re done
+        SpacecraftPosition current = obj.getCurrentSpacecraftPosition();
+        if (current == null) {
+            return;
+        }
+
+        // Fetch current lat/lon for the spacecraft marker
+        GeodeticPoint scLatLon = current.getLatLonHeight();
+        if (scLatLon == null) {
+            return; // safety check
+        }
+
+        // Project the spacecraft’s current lat/lon into canvas coordinates
+        double[] scCenter = DrawingUtils.mapToWidgetCoordinates(
+                Math.toDegrees(scLatLon.getLatitude()),
+                Math.toDegrees(scLatLon.getLongitude()),
+                widgetViewport,
+                latLonViewport
+        );
+
+        // --- 2D marker size: doubled vs original ---
+        // Original was 4px (normal) and 8px (selected). Now we double: 8px normal, 16px selected.
+        double baseSize = 8.0;                  // normal box size
+        double size = isSelected ? 2 * baseSize // selected box size (16)
+                                 : baseSize;    // normal box size (8)
+
+        // --- Draw the filled spacecraft box ---
+        // Fill uses the same color chosen above (normal or brightened)
+        gc.fillRect(
+                scCenter[0] - size / 2.0, // left X (centered on point)
+                scCenter[1] - size / 2.0, // top Y (centered on point)
+                size,                     // width
+                size                      // height
+        );
+
+        // --- Draw a black outline around the box ---
+        gc.setLineWidth(isSelected ? 2.0 : 1.5); // slightly thicker outline if selected
+        gc.setStroke(Color.BLACK);               // outline color
+        gc.strokeRect(
+                scCenter[0] - size / 2.0, // same rect as fill
+                scCenter[1] - size / 2.0,
+                size,
+                size
+        );
+
+        // --- Draw the spacecraft name with bold font & black outline ---
+        // Choose a bold font (bump size a bit when selected)
+        double fontSize = isSelected ? 14 : 12; // a touch larger when selected
+        gc.setFont(javafx.scene.text.Font.font(
+                "Arial",
+                javafx.scene.text.FontWeight.BOLD,
+                fontSize
+        ));
+
+        // Position the label just above the box
+        double labelX = scCenter[0];
+        double labelY = scCenter[1] - size / 2.0 - 2; // 2px gap above the box
+
+        // 1) Draw the outline: render the same text in black in a small 8-direction “shadow”
+        gc.setFill(Color.BLACK);
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                if (dx != 0 || dy != 0) { // skip the center — we’ll draw the real text there
+                    gc.fillText(obj.getName(), labelX + dx, labelY + dy);
+                }
             }
         }
+
+        // 2) Draw the actual label on top (white)
+        gc.setFill(Color.WHITE);
+        gc.fillText(obj.getName(), labelX, labelY);
     }
+
 
     public final void dispose() {
         this.groupItem.visibleProperty().unbind();
