@@ -283,7 +283,7 @@ public class OrbitGraphics implements IOrbitListener {
 
         // --- Draw the spacecraft name with bold font & black outline ---
         // Choose a bold font (bump size a bit when selected)
-        double fontSize = isSelected ? 14 : 12; // a touch larger when selected
+        double fontSize = isSelected ? 16 : 14; // a touch larger when selected
         gc.setFont(javafx.scene.text.Font.font(
                 "Arial",
                 javafx.scene.text.FontWeight.BOLD,
