@@ -35,6 +35,10 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.shape.StrokeType;
+
 import org.hipparchus.geometry.euclidean.threed.Vector3D;
 import org.orekit.bodies.GeodeticPoint;
 
@@ -80,7 +84,7 @@ public class OrbitGraphics implements IOrbitListener {
                 cil.setMaterial(pm);
             }
         }
-        this.textItem.setStroke(c);
+        // this.textItem.setStroke(c);
         this.scItem.setMaterial(pm);
     }
 
@@ -153,7 +157,8 @@ public class OrbitGraphics implements IOrbitListener {
         this.textItem.getTransforms().add(result);
         this.textItem.setText(obj.getName());
         this.textItem.setFill(Color.WHITE);
-        this.textItem.setStroke(c);
+        this.textItem.setStroke(Color.BLACK);
+        //this.textItem.setStroke(c);
     }
 
     private Point3D transform(SpacecraftPosition ss) {
@@ -171,6 +176,14 @@ public class OrbitGraphics implements IOrbitListener {
         this.scItem = new Box(15,15,15);
         // Spacecraft text
         this.textItem = new Text(0, 0, obj.getName());
+
+        // --- Make the label pop like 2D ---
+        this.textItem.setFont(Font.font("System", FontWeight.BOLD, 14)); // tweak size if you want
+        this.textItem.setFill(Color.WHITE);                                // white fill
+        this.textItem.setStroke(Color.BLACK);                              // black outline
+        this.textItem.setStrokeWidth(2.0);                                 // thickness
+        this.textItem.setStrokeType(StrokeType.OUTSIDE);                   // keep outline outside the glyph
+        // -----------------------------------
 
         return Arrays.asList(graphicItem, scItem, textItem);
     }
