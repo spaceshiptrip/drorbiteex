@@ -4,31 +4,31 @@
         <elevationThreshold>5</elevationThreshold>
         <trackingInterval>10</trackingInterval>
     </configuration>
-    <ground-station code="AS4" color="0xffffffff" height="162.0" id="61f8e26a-3521-470e-8199-effbc36fbe78" latitude="64.795" longitude="-147.5383" name="Alaska" site="" visible="true">
+    <ground-station code="AS4" color="0xff00ffff" height="162.0" id="61f8e26a-3521-470e-8199-effbc36fbe78" latitude="64.795" longitude="-147.5383" name="Alaska" site="" visible="true">
         <description>NASA Primary Site: Maximum Utilization</description>
     </ground-station>
-    <ground-station code="ANT" color="0xffffffff" height="0.0" id="8388ddf4-7634-4062-bb18-90ffb696d121" latitude="-69.394" longitude="76.173" name="Antarctica" site="ISRO Antarctica" visible="true">
+    <ground-station code="ANT" color="0x00ff00ff" height="0.0" id="8388ddf4-7634-4062-bb18-90ffb696d121" latitude="-69.394" longitude="76.173" name="Antarctica" site="ISRO Antarctica" visible="true">
         <description>ISRO Primary Site</description>
     </ground-station>
-    <ground-station code="Antarctica " color="0x00ff00ff" height="10.0" id="abf6b520-b825-4e02-ad04-f45974cc5d09" latitude="-69.407788" longitude="76.187222" name="Antarctica (Bharati)" site="ISRO Antarctica (Bharati)" visible="true">
+    <ground-station code="Antarctica " color="0x00ff00ff" height="10.0" id="abf6b520-b825-4e02-ad04-f45974cc5d09" latitude="-69.407788" longitude="76.187222" name="Antarctica (Bharati)" site="ISRO Antarctica (Bharati)" visible="false">
         <description></description>
     </ground-station>
-    <ground-station code="Bangalore" color="0xffffffff" height="839.91" id="c73eea27-d428-4201-8a70-8a80d4d9451c" latitude="13.034" longitude="77.511" name="Bangalore" site="ISRO Bangalore" visible="true">
+    <ground-station code="Bangalore" color="0x00ffffff" height="839.91" id="c73eea27-d428-4201-8a70-8a80d4d9451c" latitude="13.034" longitude="77.511" name="Bangalore" site="ISRO Bangalore" visible="true">
         <description></description>
     </ground-station>
-    <ground-station code="Biak" color="0xffffffff" height="122.0" id="ef6d1159-f5ec-4150-9902-f7edb1905641" latitude="-1.176" longitude="136.1" name="Biak" site="ISRO Biak" visible="true">
+    <ground-station code="Biak" color="0x00ff00ff" height="122.0" id="ef6d1159-f5ec-4150-9902-f7edb1905641" latitude="-1.176" longitude="136.1" name="Biak" site="ISRO Biak" visible="true">
         <description></description>
     </ground-station>
-    <ground-station code="Lucknow" color="0xffffffff" height="74.54" id="ffbd97f8-45e0-492e-a485-67223399d87c" latitude="26.913" longitude="80.957" name="Lucknow" site="ISRO Lucknow" visible="true">
+    <ground-station code="Lucknow" color="0x00ffffff" height="74.54" id="ffbd97f8-45e0-492e-a485-67223399d87c" latitude="26.913" longitude="80.957" name="Lucknow" site="ISRO Lucknow" visible="true">
         <description></description>
     </ground-station>
-    <ground-station code="Mauritius" color="0xffffffff" height="620.0" id="55201942-9a0f-4b86-abe4-e81638c09ba5" latitude="-20.347" longitude="57.518" name="Mauritius" site="ISRO Mauritius" visible="true">
+    <ground-station code="Mauritius" color="0x00ffffff" height="620.0" id="55201942-9a0f-4b86-abe4-e81638c09ba5" latitude="-20.347" longitude="57.518" name="Mauritius" site="ISRO Mauritius" visible="true">
         <description></description>
     </ground-station>
-    <ground-station code="PA11" color="0xffffffff" height="25.0" id="a313a4b0-740c-4107-b39a-60612b785111" latitude="-52.9381" longitude="-70.8572" name="Punta Arenas" site="NASA Punta Arenas" visible="true">
+    <ground-station code="PA11" color="0xff00ffff" height="25.0" id="a313a4b0-740c-4107-b39a-60612b785111" latitude="-52.9381" longitude="-70.8572" name="Punta Arenas" site="NASA Punta Arenas" visible="true">
         <description>NASA Primary Site: Maximum Utilization</description>
     </ground-station>
-    <ground-station code="SAN" color="0xffffffff" height="625.0" id="d47ec3ba-8da6-414a-85fd-3a116dd25cf0" latitude="17.028" longitude="78.188" name="Shadnagar" site="ISRO Shadnagar" visible="true">
+    <ground-station code="SAN" color="0x00ff00ff" height="625.0" id="d47ec3ba-8da6-414a-85fd-3a116dd25cf0" latitude="17.028" longitude="78.188" name="Shadnagar" site="ISRO Shadnagar" visible="true">
         <description>ISRO Primary Site</description>
     </ground-station>
     <ground-station code="Sriharikota" color="0xffffffff" height="0.0" id="67256af3-6d8b-417b-b801-0046f4fedee2" latitude="13.67" longitude="80.19" name="Sriharikota" site="ISRO Sriharikota" visible="false">
@@ -37,22 +37,22 @@
     <ground-station code="Svalbard" color="0xffffffff" height="500.0" id="a46a7ff3-6731-4497-b0cd-7148e1466298" latitude="78.23" longitude="15.4" name="Svalbard" site="ISRO/KSAT Svalbard" visible="false">
         <description></description>
     </ground-station>
-    <ground-station code="SG56" color="0xffffffff" height="461.0" id="174d7134-7433-407e-b041-4c0832ceb04e" latitude="78.224" longitude="15.498" name="Svalbard" site="ISRO Svalbard" visible="true">
+    <ground-station code="SG56" color="0x00ff00ff" height="461.0" id="174d7134-7433-407e-b041-4c0832ceb04e" latitude="78.224" longitude="15.498" name="Svalbard" site="ISRO Svalbard" visible="true">
         <description>ISRO Supplemental Site</description>
     </ground-station>
-    <ground-station code="SG12" color="0xffffffff" height="497.0" id="517b2d5c-8595-43a6-b657-be8a483b9a76" latitude="78.2307" longitude="15.3897" name="Svalbard" site="NASA Svalbard, Norway" visible="true">
+    <ground-station code="SG12" color="0xff00ffff" height="497.0" id="517b2d5c-8595-43a6-b657-be8a483b9a76" latitude="78.2307" longitude="15.3897" name="Svalbard" site="NASA Svalbard, Norway" visible="true">
         <description>NASA Primary Site: High Utilization</description>
     </ground-station>
     <ground-station code="Trivandrum" color="0xffffffff" height="-50.0" id="afa84b94-e219-4155-a69c-dee5b56a7548" latitude="8.5365" longitude="76.8732" name="Trivandrum" site="ISRO Trivandrum" visible="false">
         <description>Launch only</description>
     </ground-station>
-    <ground-station code="TrollSat" color="0xffffffff" height="1416.58" id="d3c06e93-25d7-47b5-b723-a99ad232ea76" latitude="-72.0022221" longitude="2.52412378" name="TrollSat" site="ISRO/KSAT TrollSat" visible="true">
+    <ground-station code="TrollSat" color="0xffffffff" height="1416.58" id="d3c06e93-25d7-47b5-b723-a99ad232ea76" latitude="-72.0022221" longitude="2.52412378" name="TrollSat" site="ISRO/KSAT TrollSat" visible="false">
         <description></description>
     </ground-station>
-    <ground-station code="Tromso" color="0xffffffff" height="0.0" id="848b565b-917b-4a33-a699-896ea6ecbed5" latitude="69.6618" longitude="18.9417" name="Tromso" site="ISRO/KSAT Tromso" visible="true">
+    <ground-station code="Tromso" color="0xffffffff" height="0.0" id="848b565b-917b-4a33-a699-896ea6ecbed5" latitude="69.6618" longitude="18.9417" name="Tromso" site="ISRO/KSAT Tromso" visible="false">
         <description></description>
     </ground-station>
-    <ground-station code="WG5" color="0xffffffff" height="10.0" id="f49f5259-a7c8-4cdd-85fe-a379725d9668" latitude="37.9263" longitude="-75.4756" name="Wallops" site="NASA Wallops" visible="true">
+    <ground-station code="WG5" color="0xff00ffff" height="10.0" id="f49f5259-a7c8-4cdd-85fe-a379725d9668" latitude="37.9263" longitude="-75.4756" name="Wallops" site="NASA Wallops" visible="true">
         <description>NASA Primary Site: High Utilization</description>
     </ground-station>
 </ns2:ground-station-config>
