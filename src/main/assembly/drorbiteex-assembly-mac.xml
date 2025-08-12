@@ -31,7 +31,7 @@
             <lineEnding>unix</lineEnding>
         </file>
         <file>
-            <source> ${project.basedir}/scripts/setup.sh</source>
+            <source> ${project.basedir}/scripts/config.sh</source>
             <outputDirectory>./</outputDirectory>
             <fileMode>0755</fileMode>
             <lineEnding>unix</lineEnding>
