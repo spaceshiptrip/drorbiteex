@@ -42,6 +42,8 @@ import javafx.scene.shape.StrokeType;
 import org.hipparchus.geometry.euclidean.threed.Vector3D;
 import org.orekit.bodies.GeodeticPoint;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,7 +54,6 @@ public class OrbitGraphics implements IOrbitListener {
     private final Orbit obj;
 
     private final SimpleBooleanProperty visibleProperty = new SimpleBooleanProperty(false);
-
     private final SimpleBooleanProperty selectedProperty = new SimpleBooleanProperty(false);
 
     private Group graphicItem;
@@ -72,7 +73,6 @@ public class OrbitGraphics implements IOrbitListener {
     private void updateOrbitColor(boolean selected) {
         Color c = selected ? Color.valueOf(obj.getColor()).brighter().brighter() : Color.valueOf(obj.getColor());
         updateElementsColor(c);
-
     }
 
     private void updateElementsColor(Color c) {
@@ -84,21 +84,14 @@ public class OrbitGraphics implements IOrbitListener {
                 cil.setMaterial(pm);
             }
         }
-        // this.textItem.setStroke(c);
         this.scItem.setMaterial(pm);
     }
 
-    public SimpleBooleanProperty visibleProperty() {
-        return visibleProperty;
-    }
+    public SimpleBooleanProperty visibleProperty() { return visibleProperty; }
 
-    public SimpleBooleanProperty selectedProperty() {
-        return selectedProperty;
-    }
+    public SimpleBooleanProperty selectedProperty() { return selectedProperty; }
 
-    public String getName() {
-        return obj.getName();
-    }
+    public String getName() { return obj.getName(); }
 
     public final Group createGraphicItem() {
         if(this.groupItem != null) {
@@ -111,9 +104,7 @@ public class OrbitGraphics implements IOrbitListener {
         return this.groupItem;
     }
 
-    public Group getGraphicItem() {
-        return graphicItem;
-    }
+    public Group getGraphicItem() { return graphicItem; }
 
     private void updateGraphicItems(boolean renderTrajectory) {
         if(renderTrajectory) {
@@ -150,7 +141,7 @@ public class OrbitGraphics implements IOrbitListener {
         this.scItem.getTransforms().clear();
         this.scItem.getTransforms().add(new Translate(scLocation.getX(), scLocation.getY(), scLocation.getZ()));
 
-        // Set spacecraft text where it is now
+        // Set spacecraft text where it is now (3D view label)
         Transform result = new Translate(scLocation.getX() * 1.05, scLocation.getY() * 1.05, scLocation.getZ() * 1.05);
         result = result.createConcatenation(new Rotate(Math.toDegrees(currentPosition.getLatLonHeight().getLongitude()), new Point3D(0, -1, 0)));
         this.textItem.getTransforms().clear();
@@ -158,7 +149,6 @@ public class OrbitGraphics implements IOrbitListener {
         this.textItem.setText(obj.getName());
         this.textItem.setFill(Color.WHITE);
         this.textItem.setStroke(Color.BLACK);
-        //this.textItem.setStroke(c);
     }
 
     private Point3D transform(SpacecraftPosition ss) {
@@ -174,20 +164,18 @@ public class OrbitGraphics implements IOrbitListener {
         this.graphicItem = new Group();
         // Spacecraft object
         this.scItem = new Box(15,15,15);
-        // Spacecraft text
+        // Spacecraft text (3D view)
         this.textItem = new Text(0, 0, obj.getName());
 
-        // --- Make the label pop like 2D ---
-        this.textItem.setFont(Font.font("System", FontWeight.BOLD, 14)); // tweak size if you want
-        this.textItem.setFill(Color.WHITE);                                // white fill
-        this.textItem.setStroke(Color.BLACK);                              // black outline
-        this.textItem.setStrokeWidth(2.0);                                 // thickness
-        this.textItem.setStrokeType(StrokeType.OUTSIDE);                   // keep outline outside the glyph
-        // -----------------------------------
+        // Make the 3D label readable
+        this.textItem.setFont(Font.font("System", FontWeight.BOLD, 14));
+        this.textItem.setFill(Color.WHITE);
+        this.textItem.setStroke(Color.BLACK);
+        this.textItem.setStrokeWidth(2.0);
+        this.textItem.setStrokeType(StrokeType.OUTSIDE);
 
         return Arrays.asList(graphicItem, scItem, textItem);
     }
-
 
     public void draw(GraphicsContext gc, ViewBox widgetViewport, ViewBox latLonViewport, boolean isSelected) {
         // Only draw if the orbit is flagged visible
@@ -208,45 +196,40 @@ public class OrbitGraphics implements IOrbitListener {
 
         // Pick color: brighten if this orbit is selected to make it pop
         if (!isSelected) {
-            gc.setStroke(Color.valueOf(obj.getColor())); // normal color
-            gc.setFill(gc.getStroke());                  // fill matches line color
-            gc.setLineWidth(1.5);                        // thinner track when not selected
+            gc.setStroke(Color.valueOf(obj.getColor()));
+            gc.setFill(gc.getStroke());
+            gc.setLineWidth(1.5);
         } else {
-            gc.setStroke(Color.valueOf(obj.getColor()).brighter().brighter()); // brighter when selected
-            gc.setFill(gc.getStroke());                                       // fill matches brighter stroke
-            gc.setLineWidth(3.5);                                              // thicker line for emphasis
+            gc.setStroke(Color.valueOf(obj.getColor()).brighter().brighter());
+            gc.setFill(gc.getStroke());
+            gc.setLineWidth(3.5);
         }
 
         // Draw the ground-track polyline (with gap handling across large longitude jumps)
         if (!latLonPoints.isEmpty()) {
-            // Start from the first point
             double[] previousPoint = latLonPoints.get(0);
             double[] start = DrawingUtils.mapToWidgetCoordinates(
                     previousPoint[0], previousPoint[1], widgetViewport, latLonViewport);
 
-            gc.beginPath();                 // begin path for the polyline
-            gc.moveTo(start[0], start[1]);  // move to the first projected point
+            gc.beginPath();
+            gc.moveTo(start[0], start[1]);
 
             for (int i = 1; i < latLonPoints.size(); ++i) {
                 double[] nextPoint = latLonPoints.get(i);
-
-                // Project next lat/lon to canvas coords
                 double[] p2 = DrawingUtils.mapToWidgetCoordinates(
                         nextPoint[0], nextPoint[1], widgetViewport, latLonViewport);
 
-                // If there is a big longitude jump (e.g., across ±180°), break the polyline
                 boolean bigJump = Math.abs(nextPoint[1] - previousPoint[1]) > 45;
                 if (bigJump) {
-                    gc.moveTo(p2[0], p2[1]); // restart the path to avoid a line through the map edge
+                    gc.moveTo(p2[0], p2[1]); // avoid line through the map edge
                 } else {
-                    gc.lineTo(p2[0], p2[1]); // continue the path normally
+                    gc.lineTo(p2[0], p2[1]);
                 }
-
-                previousPoint = nextPoint;  // advance the previous point
+                previousPoint = nextPoint;
             }
 
-            gc.stroke();   // render the polyline
-            gc.closePath();// close the path
+            gc.stroke();
+            gc.closePath();
         }
 
         // If we don’t have a current position, we’re done
@@ -269,59 +252,203 @@ public class OrbitGraphics implements IOrbitListener {
                 latLonViewport
         );
 
-        // --- 2D marker size: doubled vs original ---
-        // Original was 4px (normal) and 8px (selected). Now we double: 8px normal, 16px selected.
-        double baseSize = 8.0;                  // normal box size
-        double size = isSelected ? 2 * baseSize // selected box size (16)
-                                 : baseSize;    // normal box size (8)
+        // Marker size
+        double baseSize = 8.0;
+        double size = isSelected ? 2 * baseSize : baseSize;
 
-        // --- Draw the filled spacecraft box ---
-        // Fill uses the same color chosen above (normal or brightened)
-        gc.fillRect(
-                scCenter[0] - size / 2.0, // left X (centered on point)
-                scCenter[1] - size / 2.0, // top Y (centered on point)
-                size,                     // width
-                size                      // height
-        );
+        // Draw the filled spacecraft box
+        gc.fillRect(scCenter[0] - size / 2.0, scCenter[1] - size / 2.0, size, size);
 
-        // --- Draw a black outline around the box ---
-        gc.setLineWidth(isSelected ? 2.0 : 1.5); // slightly thicker outline if selected
-        gc.setStroke(Color.BLACK);               // outline color
-        gc.strokeRect(
-                scCenter[0] - size / 2.0, // same rect as fill
-                scCenter[1] - size / 2.0,
-                size,
-                size
-        );
+        // Outline
+        gc.setLineWidth(isSelected ? 2.0 : 1.5);
+        gc.setStroke(Color.BLACK);
+        gc.strokeRect(scCenter[0] - size / 2.0, scCenter[1] - size / 2.0, size, size);
 
-        // --- Draw the spacecraft name with bold font & black outline ---
-        // Choose a bold font (bump size a bit when selected)
-        double fontSize = isSelected ? 16 : 14; // a touch larger when selected
-        gc.setFont(javafx.scene.text.Font.font(
-                "Arial",
-                javafx.scene.text.FontWeight.BOLD,
-                fontSize
-        ));
+        // --- Draw the spacecraft name with bold font, clamped to the MAP viewport (with shadow margin) ---
+        double fontSize = isSelected ? 16 : 14;
+        Font labelFont = javafx.scene.text.Font.font("Arial", javafx.scene.text.FontWeight.BOLD, fontSize);
+        gc.setFont(labelFont);
 
-        // Position the label just above the box
+        // Initial label position (above the marker)
         double labelX = scCenter[0];
-        double labelY = scCenter[1] - size / 2.0 - 2; // 2px gap above the box
+        double labelY = scCenter[1] - size / 2.0 - 2;
 
-        // 1) Draw the outline: render the same text in black in a small 8-direction “shadow”
+        // Measure text
+        double[] textWH = measureText(labelFont, obj.getName());
+        double textW = textWH[0];
+        double textH = textWH[1];
+
+        // Resolve the map viewport pixel bounds from widgetViewport (supports multiple APIs; falls back to canvas)
+        double[] bounds = viewportBounds(widgetViewport, gc);
+        double mapLeft   = bounds[0];
+        double mapTop    = bounds[1];
+        double mapRight  = bounds[2];
+        double mapBottom = bounds[3];
+
+        // Extra margin to account for the 8-direction text shadow/outline (so we move BEFORE first/last letter clips)
+        double shadowRadius = 10.0;   // was 1.5
+
+        double[] clamped = clampLabelToRectWithinMap(
+                labelX, labelY, textW, textH,
+                mapLeft, mapTop, mapRight, mapBottom,
+                /*markerSizePx=*/size,
+                /*shadowRadiusPx=*/shadowRadius
+        );
+        labelX = clamped[0];
+        labelY = clamped[1];
+
+        // Outline (simple 8-direction shadow)
         gc.setFill(Color.BLACK);
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
-                if (dx != 0 || dy != 0) { // skip the center — we’ll draw the real text there
+                if (dx != 0 || dy != 0) {
                     gc.fillText(obj.getName(), labelX + dx, labelY + dy);
                 }
             }
         }
 
-        // 2) Draw the actual label on top (white)
+        // Foreground text
         gc.setFill(Color.WHITE);
         gc.fillText(obj.getName(), labelX, labelY);
     }
 
+    // ----- Helpers -----
+
+    private static double[] measureText(Font font, String text) {
+        Text t = new Text(text);
+        t.setFont(font);
+        return new double[] { t.getLayoutBounds().getWidth(), t.getLayoutBounds().getHeight() };
+    }
+
+    /**
+     * Try to extract a numeric property via a list of method names.
+     */
+    private static double tryInvokeNumber(Object o, String... methods) {
+        for (String m : methods) {
+            try {
+                Method mm = o.getClass().getMethod(m);
+                Object v = mm.invoke(o);
+                if (v instanceof Number) return ((Number) v).doubleValue();
+            } catch (Exception ignored) { }
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * Try to extract a numeric field via a list of field names.
+     */
+    private static double tryFieldNumber(Object o, String... fields) {
+        for (String f : fields) {
+            try {
+                Field ff = o.getClass().getDeclaredField(f);
+                ff.setAccessible(true);
+                Object v = ff.get(o);
+                if (v instanceof Number) return ((Number) v).doubleValue();
+            } catch (Exception ignored) { }
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * Gets viewport pixel bounds [left, top, right, bottom] from widgetViewport.
+     * Supports common APIs:
+     *  - getX/getY/getWidth/getHeight
+     *  - getMinX/getMinY/getMaxX/getMaxY
+     *  - fields: x,y,width,height or minX,minY,maxX,maxY
+     * Falls back to canvas bounds if unavailable.
+     */
+    private static double[] viewportBounds(Object widgetViewport, GraphicsContext gc) {
+        // Preferred: explicit min/max
+        double minX = tryInvokeNumber(widgetViewport, "getMinX");
+        if (Double.isNaN(minX)) minX = tryFieldNumber(widgetViewport, "minX");
+
+        double minY = tryInvokeNumber(widgetViewport, "getMinY");
+        if (Double.isNaN(minY)) minY = tryFieldNumber(widgetViewport, "minY");
+
+        double maxX = tryInvokeNumber(widgetViewport, "getMaxX");
+        if (Double.isNaN(maxX)) maxX = tryFieldNumber(widgetViewport, "maxX");
+
+        double maxY = tryInvokeNumber(widgetViewport, "getMaxY");
+        if (Double.isNaN(maxY)) maxY = tryFieldNumber(widgetViewport, "maxY");
+
+        // If min/max missing, try x/y + width/height
+        if (Double.isNaN(minX)) {
+            minX = tryInvokeNumber(widgetViewport, "getX");
+            if (Double.isNaN(minX)) minX = tryFieldNumber(widgetViewport, "x");
+        }
+        if (Double.isNaN(minY)) {
+            minY = tryInvokeNumber(widgetViewport, "getY");
+            if (Double.isNaN(minY)) minY = tryFieldNumber(widgetViewport, "y");
+        }
+        if (Double.isNaN(maxX)) {
+            double w = tryInvokeNumber(widgetViewport, "getWidth");
+            if (Double.isNaN(w)) w = tryFieldNumber(widgetViewport, "width");
+            if (!Double.isNaN(minX) && !Double.isNaN(w)) maxX = minX + w;
+        }
+        if (Double.isNaN(maxY)) {
+            double h = tryInvokeNumber(widgetViewport, "getHeight");
+            if (Double.isNaN(h)) h = tryFieldNumber(widgetViewport, "height");
+            if (!Double.isNaN(minY) && !Double.isNaN(h)) maxY = minY + h;
+        }
+
+        // Fallback to canvas bounds if still unknown
+        if (Double.isNaN(minX)) minX = 0;
+        if (Double.isNaN(minY)) minY = 0;
+        if (Double.isNaN(maxX)) maxX = gc.getCanvas().getWidth();
+        if (Double.isNaN(maxY)) maxY = gc.getCanvas().getHeight();
+
+        return new double[] { minX, minY, maxX, maxY };
+    }
+
+    /**
+     * Clamp a label so it stays fully inside the map rectangle (including shadow).
+     * (labelX,labelY) is the Canvas baseline point for fillText.
+     * Strategy:
+     *  - Prefer above; if top clips, flip below.
+     *  - Clamp horizontally so left/right never clip (text + shadow).
+     *  - Clamp vertically to keep all glyphs visible (text + shadow).
+     */
+    private static double[] clampLabelToRectWithinMap(double labelX, double labelY, double textW, double textH,
+                                                      double left, double top, double right, double bottom,
+                                                      double markerSizePx, double shadowRadiusPx) {
+        // Base padding plus extra for the 8-direction shadow
+        double pad = 6.0 + shadowRadiusPx;
+
+        // Start centered over labelX
+        double drawX = labelX - (textW / 2.0);
+        double drawY = labelY; // baseline
+
+        // Approximate ascent/descent
+        double approxAscent = 0.8 * textH;
+        double descent = textH - approxAscent;
+
+        // If above would clip (accounting for shadow), place below the marker
+        if (drawY - approxAscent - shadowRadiusPx < top + pad) {
+            drawY = labelY + markerSizePx + pad + textH; // below
+        }
+
+        // Horizontal clamp (keep fully visible left/right incl. shadow)
+        if (drawX - shadowRadiusPx < left + pad) {
+            drawX = left + pad + shadowRadiusPx;
+        }
+        if (drawX + textW + shadowRadiusPx > right - pad) {
+            drawX = right - pad - shadowRadiusPx - textW;
+        }
+
+        // Vertical clamp (keep fully visible top/bottom incl. shadow)
+        if (drawY - approxAscent - shadowRadiusPx < top + pad) {
+            drawY = top + pad + approxAscent + shadowRadiusPx;
+        }
+        if (drawY + descent + shadowRadiusPx > bottom - pad) {
+            drawY = bottom - pad - shadowRadiusPx - descent;
+        }
+
+        // Convert back to baseline-x
+        double baselineX = drawX + (textW / 2.0);
+        return new double[] { baselineX, drawY };
+    }
+
+    // ----- Lifecycle & listener plumbing -----
 
     public final void dispose() {
         this.groupItem.visibleProperty().unbind();
@@ -334,7 +461,7 @@ public class OrbitGraphics implements IOrbitListener {
 
     @Override
     public void orbitAdded(OrbitManager manager, Orbit orbit) {
-        // Do nothing here
+        // No-op
     }
 
     @Override
@@ -358,12 +485,9 @@ public class OrbitGraphics implements IOrbitListener {
         }
     }
 
-    public Orbit getOrbit() {
-        return obj;
-    }
+    public Orbit getOrbit() { return obj; }
 
     @Override
-    public String toString() {
-        return this.obj.getName();
-    }
+    public String toString() { return this.obj.getName(); }
 }
+
