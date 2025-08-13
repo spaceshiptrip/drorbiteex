@@ -515,7 +515,7 @@ public class Main implements Initializable, IOrbitListener, IGroundStationListen
 
     public void onAboutAction(ActionEvent actionEvent) {
         DialogUtils.info("About " + DrOrbiteex.APPLICATION_NAME + "...", DrOrbiteex.APPLICATION_NAME + " " + DrOrbiteex.VERSION,
-                String.format("Orbit visualisation and processing application\n\nCopyright (c) 2022-2023 Dario Lucia\n\nhttps://www.dariolucia.eu\n" +
+                String.format("Orbit visualisation and processing application\n\nAdapted for NISAR by Jay Torres\n\nBased on:\n\nCopyright (c) 2022-2023 Dario Lucia\n\nhttps://www.dariolucia.eu\n" +
                         "https://github.com/dariol83/drorbiteex"));
     }
 
