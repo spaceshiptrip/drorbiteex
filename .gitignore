@@ -25,6 +25,7 @@ hs_err_pid*
 /.idea/
 /target/
 /builds-*/
+builds/
 
 # Ignore bundled JVM binaries
 jvm/
